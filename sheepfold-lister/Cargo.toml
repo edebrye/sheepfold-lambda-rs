@@ -1,0 +1,20 @@
+[package]
+name = "sheepfold-lister"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lambda_http     = { workspace = true }
+tokio           = { workspace = true }
+sheepfold-model = { path = "../sheepfold-model" }
+aws-config.workspace = true
+aws-sdk-dynamodb.workspace = true
+serde_dynamo.workspace = true
+serde_json.workspace = true
+
+
+[package.metadata.lambda.env]
+DYNAMODB_TABLE_NAME = "sheepfold"
+
+[package.metadata.lambda.deploy]
+role = "arn:aws:iam::259267736296:role/sheepfold-lambda-execution-role"

@@ -1,6 +1,6 @@
 # creates state bucket
 tf-bootstrap:
-	terragrunt backend bootstrap
+	terragrunt --working-dir=terraform backend bootstrap
 
 # Compile rust code and produce a zip file per lambda
 build:

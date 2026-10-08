@@ -16,3 +16,10 @@ deploy: build
 	cargo lambda deploy sheepfold-lister
 	cargo lambda deploy sheepfold-reader
 	cargo lambda deploy sheepfold-remover
+
+test:
+	hurl \
+	--test \
+	--repeat 100 \
+	--variable base_url=$(shell terragrunt --working-dir=terraform output api_url | jq -r) \
+	basic.hurl

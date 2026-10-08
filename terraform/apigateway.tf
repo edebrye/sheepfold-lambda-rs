@@ -20,7 +20,7 @@ resource "aws_api_gateway_resource" "sheep_id" {
   path_part   = "{id}"
 }
 
-resource "aws_api_gateway_deployment" "main" {
+resource "aws_api_gateway_deployment" "this" {
   rest_api_id = aws_api_gateway_rest_api.sheepfold.id
   triggers = {
     redeploy = join("-", [
@@ -29,16 +29,38 @@ resource "aws_api_gateway_deployment" "main" {
     ])
   }
 
+  depends_on = [
+    module.lister,
+    module.adder,
+    module.reader,
+    module.remover,
+  ]
+
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_api_gateway_stage" "main" {
+resource "aws_api_gateway_stage" "v1" {
   rest_api_id   = aws_api_gateway_rest_api.sheepfold.id
-  deployment_id = aws_api_gateway_deployment.main.id
-  stage_name    = "main"
+  deployment_id = aws_api_gateway_deployment.this.id
+  stage_name    = "v1"
   variables = {
     dynamodb_table_name = aws_dynamodb_table.sheepfold.name
   }
+}
+
+resource "aws_api_gateway_method_settings" "v1" {
+  rest_api_id = aws_api_gateway_rest_api.sheepfold.id
+  stage_name  = aws_api_gateway_stage.v1.stage_name
+  method_path = "*/*"
+
+  settings {
+    logging_level = "OFF" #"ERROR"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "apigw_log_group" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.sheepfold.id}/${aws_api_gateway_stage.v1.stage_name}"
+  retention_in_days = 7
 }

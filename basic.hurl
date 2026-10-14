@@ -17,4 +17,4 @@ DELETE {{base_url}}/sheep/{{id}}
 HTTP 200
 [Asserts]
 jsonpath "$.deleted" == true
-jsonpath "$.old.name" == "John Doe"
+jsonpath "$.id" == "{{id}}"

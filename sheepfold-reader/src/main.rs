@@ -1,15 +1,13 @@
-use aws_config::BehaviorVersion;
-use aws_sdk_dynamodb::Client;
-use lambda_http::{run, service_fn, tracing, Error};
+use lambda_http::{Error, run, service_fn, tracing};
 mod http_handler;
 use http_handler::function_handler;
+use sheepfold_lambda_utils::get_db;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     tracing::init_default_subscriber();
 
-    let config = aws_config::defaults(BehaviorVersion::latest()).load().await;
-    let ddb = Client::new(&config);
+    let db = get_db().await;
 
-    run(service_fn(|event| function_handler(&ddb, event))).await
+    run(service_fn(|event| function_handler(&db, event))).await
 }

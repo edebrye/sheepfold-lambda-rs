@@ -1,39 +1,25 @@
-use aws_sdk_dynamodb::Client;
-use lambda_http::{Body, Error, Request, RequestExt, Response};
-use serde_dynamo::from_attribute_value;
+use lambda_http::{Body, Error, Request, Response};
+use sheepfold_lambda_utils::{base_response, Db};
+use sheepfold_model::Sheep;
 
 /// This is the main body for the function.
 /// Write your code inside it.
 /// There are some code example in the following URLs:
 /// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
-pub(crate) async fn function_handler(
-    ddb: &Client,
-    event: Request,
-) -> Result<Response<Body>, Error> {
-    let stage_parameters = event.stage_variables();
-    let table_name = stage_parameters
-        .first("dynamodb_table_name")
-        .expect("Table name not defined.");
-
-    let results: Vec<String> = ddb
-        .scan()
-        .table_name(table_name)
-        .projection_expression("id")
-        .send()
+pub(crate) async fn function_handler(db: &Db, _: Request) -> Result<Response<Body>, Error> {
+    let sheep_ids: Vec<String> = Sheep::all()
+        .exec(&mut db.clone())
         .await?
-        .items()
-        .to_vec()
         .iter()
-        .map(|sheep| from_attribute_value(sheep.get("id").cloned().unwrap()).unwrap())
+        .map(|sheep| sheep.get_id().to_string())
         .collect();
 
-    let body = serde_json::to_string(&results)?;
+    let body = serde_json::to_string(&sheep_ids)?;
 
     // Return something that implements IntoResponse.
     // It will be serialized to the right response event automatically by the runtime
-    Ok(Response::builder()
+    Ok(base_response()
         .status(200)
-        .header("content-type", "application/json")
         .body(body.into())
         .map_err(Box::new)?)
 }

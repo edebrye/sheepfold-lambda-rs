@@ -52,11 +52,10 @@ module "lister" {
   api_path        = aws_api_gateway_resource.sheep.path
   api_method      = "GET"
 
-  account_id     = data.aws_caller_identity.current.account_id
-  region         = data.aws_region.current.region
-  role_arn       = aws_iam_role.lambda.arn
-  dynamodb_table = aws_dynamodb_table.sheepfold.name
-  api_id         = aws_api_gateway_rest_api.sheepfold.id
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.region
+  role_arn   = aws_iam_role.lambda.arn
+  api_id     = aws_api_gateway_rest_api.sheepfold.id
 }
 
 module "reader" {
@@ -67,11 +66,10 @@ module "reader" {
   api_path        = aws_api_gateway_resource.sheep_id.path
   api_method      = "GET"
 
-  account_id     = data.aws_caller_identity.current.account_id
-  region         = data.aws_region.current.region
-  role_arn       = aws_iam_role.lambda.arn
-  dynamodb_table = aws_dynamodb_table.sheepfold.name
-  api_id         = aws_api_gateway_rest_api.sheepfold.id
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.region
+  role_arn   = aws_iam_role.lambda.arn
+  api_id     = aws_api_gateway_rest_api.sheepfold.id
 }
 
 module "adder" {
@@ -82,11 +80,10 @@ module "adder" {
   api_path        = aws_api_gateway_resource.sheep.path
   api_method      = "POST"
 
-  account_id     = data.aws_caller_identity.current.account_id
-  region         = data.aws_region.current.region
-  role_arn       = aws_iam_role.lambda.arn
-  dynamodb_table = aws_dynamodb_table.sheepfold.name
-  api_id         = aws_api_gateway_rest_api.sheepfold.id
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.region
+  role_arn   = aws_iam_role.lambda.arn
+  api_id     = aws_api_gateway_rest_api.sheepfold.id
 }
 
 module "remover" {
@@ -97,9 +94,8 @@ module "remover" {
   api_path        = aws_api_gateway_resource.sheep_id.path
   api_method      = "DELETE"
 
-  account_id     = data.aws_caller_identity.current.account_id
-  region         = data.aws_region.current.region
-  role_arn       = aws_iam_role.lambda.arn
-  dynamodb_table = aws_dynamodb_table.sheepfold.name
-  api_id         = aws_api_gateway_rest_api.sheepfold.id
+  account_id = data.aws_caller_identity.current.account_id
+  region     = data.aws_region.current.region
+  role_arn   = aws_iam_role.lambda.arn
+  api_id     = aws_api_gateway_rest_api.sheepfold.id
 }

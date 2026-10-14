@@ -1,0 +1,11 @@
+[package]
+name = "sheepfold-lambda-utils"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+toasty.workspace = true
+lambda_http.workspace = true
+serde_json.workspace = true
+sheepfold-model = {path = "../sheepfold-model"}
+thiserror = "2.0.21"

@@ -14,10 +14,6 @@ variable "role_arn" {
   type = string
 }
 
-variable "dynamodb_table" {
-  type = string
-}
-
 variable "api_id" {
   type = string
 }

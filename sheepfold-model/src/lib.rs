@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-
 use rand::{
     Rng, RngExt,
     distr::{Distribution, StandardUniform},
@@ -7,64 +5,38 @@ use rand::{
 };
 
 use random_names::RandomName;
+use serde::{Deserialize, Serialize};
 use strum::EnumString;
-use uuid::Uuid;
+use toasty::stmt::Uuid;
 
-pub type SheepId = Uuid;
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, EnumString)]
+#[derive(Debug, PartialEq, toasty::Embed, EnumString, Serialize, Deserialize)]
 pub enum SheepColor {
     Black,
     White,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug, toasty::Model, Serialize, Deserialize)]
+#[table = "sheepfold"]
 pub struct Sheep {
-    id: SheepId,
+    #[key]
+    #[auto]
+    id: Uuid,
+
+    #[default(RandomName::new().name)]
     name: String,
+
+    #[default(rng().random_range(20..100))]
     weight: u64,
+
+    #[default(random::<SheepColor>())]
     color: SheepColor,
 }
 
-pub struct SheepBuilder {
-    name: Option<String>,
-    weight: Option<u64>,
-    color: Option<SheepColor>,
-}
-
-impl SheepBuilder {
-    pub fn new() -> Self {
-        Self {
-            name: None,
-            weight: None,
-            color: None,
-        }
-    }
-
-    pub fn with_name(&mut self, name: String) -> &mut Self {
-        self.name = Some(name);
-        self
-    }
-
-    pub fn with_weight(&mut self, value: u64) -> &mut Self {
-        self.weight = Some(value);
-        self
-    }
-
-    pub fn with_color(&mut self, value: SheepColor) -> &mut Self {
-        self.color = Some(value);
-        self
-    }
-
-    pub fn build(self) -> Sheep {
-        Sheep {
-            id: Uuid::new_v4(),
-            name: self.name.or_else(|| Some(RandomName::new().name)).unwrap(),
-            weight: self
-                .weight
-                .or_else(|| Some(rng().random_range(20..100)))
-                .unwrap(),
-            color: self.color.or_else(|| Some(random())).unwrap(),
+impl Distribution<SheepColor> for StandardUniform {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SheepColor {
+        match rng.random_range(0..2) {
+            0 => SheepColor::Black,
+            _ => SheepColor::White,
         }
     }
 }
@@ -78,20 +50,7 @@ impl Sheep {
         self.weight > 40
     }
 
-    pub fn id(&self) -> &SheepId {
+    pub fn get_id(&self) -> &Uuid {
         &self.id
-    }
-
-    pub fn name(&self) -> &str {
-        self.name.as_str()
-    }
-}
-
-impl Distribution<SheepColor> for StandardUniform {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SheepColor {
-        match rng.random_range(0..2) {
-            0 => SheepColor::Black,
-            _ => SheepColor::White,
-        }
     }
 }

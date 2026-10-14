@@ -16,6 +16,7 @@ deploy: build
 test:
 	hurl \
 	--test \
+	--verbose \
 	--variable base_url=$(shell terragrunt --working-dir=terraform output api_url | jq -r) \
 	basic.hurl
 
@@ -25,7 +26,7 @@ tf-destroy:
 TERRAFORM_STATE_BUCKET := sheepfold-terraform-state
 
 tf-clean: tf-destroy
-	aws s3api delete-objects \s
+	aws s3api delete-objects \
 	    --bucket $(TERRAFORM_STATE_BUCKET) \
 		--delete "$$(aws s3api list-object-versions \
 		            --bucket $(TERRAFORM_STATE_BUCKET) \

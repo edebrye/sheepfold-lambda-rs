@@ -4,9 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-serde_dynamo.workspace = true
-serde = { workspace = true }
 rand = "0.10.3"
 random-names = "0.1.3"
-uuid = { version = "1.27.0", features = ["serde", "v4"] }
 strum = { version = "0.28.0", features = ["derive"] }
+toasty.workspace = true
+serde = { version = "1.0.229", features = ["derive"] }
+uuid = { version = "1.28.0", features = ["v7", "serde"] }
+
+[package.metadata.cargo-machete]
+ignored = ["uuid"]

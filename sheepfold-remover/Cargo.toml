@@ -4,13 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-lambda_http     = { workspace = true }
-tokio           = { workspace = true }
-sheepfold-model = { path = "../sheepfold-model" }
-aws-config.workspace = true
-aws-sdk-dynamodb.workspace = true
-serde_dynamo.workspace = true
+lambda_http.workspace = true
+tokio.workspace = true
 serde_json.workspace = true
+sheepfold-model = { path = "../sheepfold-model" }
+sheepfold-lambda-utils = { path = "../sheepfold-lambda-utils" }
 
 # [package.metadata.lambda.env]
 # DYNAMODB_TABLE_NAME = "sheepfold"
